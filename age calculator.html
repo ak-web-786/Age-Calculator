@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stunning Age Calculator</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5em;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            margin-bottom: 1em;
+        }
+
+        .result {
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+        }
+
+        .age-unit {
+            margin: 5px 0;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Live Age Calculator</h1>
+    <input type="date" id="birthdate" />
+    <div class="result" id="output">Enter your birthdate to calculate your age</div>
+
+    <footer>Created with ❤️ using HTML, CSS & JS</footer>
+
+    <script>
+        const birthInput = document.getElementById("birthdate");
+        const output = document.getElementById("output");
+
+        birthInput.addEventListener("change", () => {
+            clearInterval(window.ageInterval);
+            updateAge();
+            window.ageInterval = setInterval(updateAge, 1000);
+        });
+
+        function updateAge() {
+            const birthDate = new Date(birthInput.value);
+            if (isNaN(birthDate)) {
+                output.innerHTML = "Please select a valid birthdate.";
+                return;
+            }
+
+            const now = new Date();
+            let years = now.getFullYear() - birthDate.getFullYear();
+            let months = now.getMonth() - birthDate.getMonth();
+            let days = now.getDate() - birthDate.getDate();
+            let hours = now.getHours() - birthDate.getHours();
+            let minutes = now.getMinutes() - birthDate.getMinutes();
+            let seconds = now.getSeconds() - birthDate.getSeconds();
+
+            if (seconds < 0) { seconds += 60; minutes--; }
+            if (minutes < 0) { minutes += 60; hours--; }
+            if (hours < 0) { hours += 24; days--; }
+
+            if (days < 0) {
+                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate();
+                months--;
+            }
+
+            if (months < 0) {
+                months += 12;
+                years--;
+            }
+
+            output.innerHTML = `
+        <div class="age-unit"><strong>Years:</strong> ${years}</div>
+        <div class="age-unit"><strong>Months:</strong> ${months}</div>
+        <div class="age-unit"><strong>Days:</strong> ${days}</div>
+        <div class="age-unit"><strong>Hours:</strong> ${hours}</div>
+        <div class="age-unit"><strong>Minutes:</strong> ${minutes}</div>
+        <div class="age-unit"><strong>Seconds:</strong> ${seconds}</div>
+      `;
+        }
+    </script>
+</body>
+
+</html>
